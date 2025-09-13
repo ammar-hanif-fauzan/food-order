@@ -19,6 +19,19 @@ class TransactionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Carts & Orders';
+
+    public static function getNavigationSort(): ?int
+    {
+        return 5;
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -27,22 +40,33 @@ class TransactionResource extends Resource
             ]);
     }
 
+
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('invoice')->searchable(),
+                Tables\Columns\TextColumn::make('customer.name')->searchable(),
+                Tables\Columns\TextColumn::make('total')->money('IDR', locale: 'id'),
+                Tables\Columns\TextColumn::make('status')->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'success' => 'success',
+                        'expired' => 'gray',
+                        'failed' => 'danger',
+                    }),
+                Tables\Columns\TextColumn::make('created_at'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 
@@ -57,8 +81,7 @@ class TransactionResource extends Resource
     {
         return [
             'index' => Pages\ListTransactions::route('/'),
-            'create' => Pages\CreateTransaction::route('/create'),
-            'edit' => Pages\EditTransaction::route('/{record}/edit'),
+            'view'  => Pages\ViewTransaction::route('/{record}'),
         ];
     }
 }
