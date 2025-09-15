@@ -24,3 +24,4 @@ Route::middleware('auth:customer')->group(function () {
     });
 
 });
+Route::get('/', Web\Home\Index::class)->name('home');
