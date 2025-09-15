@@ -3,10 +3,10 @@
         <div class="d-flex align-items-center">
             @php
                 $image = auth()->guard('customer')->user()->image 
-                    ? asset('/storage/avatars/' . auth()->guard('customer')->user()->image) 
+                    ? asset('/storage/public/avatars/' . auth()->guard('customer')->user()->image) . '?v=' . time()
                     : 'https://cdn.jsdelivr.net/gh/SantriKoding-com/assets-food-store/images/user.png';
             @endphp
-            <img src="{{ $image }}" class="object-fit-cover rounded-circle w-15"  />
+            <img src="{{ $image }}" class="object-fit-cover rounded-circle w-15" style="width: 50px; height: 50px; object-fit: cover;" />
             <span class="fw-bold fs-6 ms-2">{{ auth()->guard('customer')->user()->name }}</span>
         </div>
         <div>
